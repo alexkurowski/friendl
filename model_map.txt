@@ -1,0 +1,20 @@
+User::
+
+id       - integer
+address  - string
+received - references (has many Emails)
+
+
+-------
+
+
+Email::
+
+id       - integer
+from     - references (belongs to User)
+           default: nil
+is_reply - boolean
+           default: false
+no_reply - boolean
+           default: false
+body     - text
