@@ -7,6 +7,20 @@ class Email < ActiveRecord::Base
   HASH_LENGTH = 12
 
 
+  def bad?
+    bad = false
+    bad = true if self.body.blank?
+    bad = true if self.body.length < 100
+    bad = true if self.body.split.length < 20
+    bad = true if self.from.banned
+
+    return bad
+  end
+
+  def reply_hash
+    self.body.lstrip[1...HASH_LENGTH+1]
+  end
+
   def was_sent
     self.sent = self.sent + 1
     save

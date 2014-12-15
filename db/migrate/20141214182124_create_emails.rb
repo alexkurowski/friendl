@@ -8,7 +8,6 @@ class CreateEmails < ActiveRecord::Migration
       t.boolean :is_reply, default: false
       t.boolean :no_reply, default: false
       t.integer :sent, default: 0
-      t.boolean :bad, default: false
 
       t.timestamps
     end

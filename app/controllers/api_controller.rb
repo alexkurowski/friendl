@@ -4,24 +4,24 @@ class ApiController < ApplicationController
 
   # Receive an email and decide what to do with it
   def receive
-    email = Email.new
-
-    email.from = User.fetch_user_with_address params['sender'] # from field of the mail with the address (my@example.com)
-
-    email.subject  = params['subject'] # subject of the mail (should be added as "# subject" [md] to the mail later)
-    email.body     = params['body']    # main text of the message
-    email.no_reply = false             # no_reply should check the to field of the email here
-    email.is_reply = (email.body.lstrip[0].in? ['@', '#'])
+    email = Email.new from:     User.fetch_user_with_address params['sender'], # from field of the mail with the address (my@example.com)
+                      subject:  params['subject'], # subject of the mail (should be added as "# subject" [md] to the mail later)
+                      body:     params['body'],    # main text of the message
+                      no_reply: false,             # no_reply should check the to field of the email here
+                      is_reply: (email.body.lstrip[0].in? ['@', '#'])
 
     # check if mail is bad
-    bad_mail email and return close
+    if email.bad?
+      email.from.ban
+      return close
+    end
 
     email.save
 
     if email.is_reply
-      send_reply get_reply_hash(email.body), email
+      send_reply email.reply_hash, email
     else
-      send_email email.user
+      send_email email.from
     end
 
 
@@ -30,10 +30,6 @@ class ApiController < ApplicationController
 
 
   private
-
-  def get_reply_hash str
-    str.lstrip[1...Email::HASH_LENGTH+1]
-  end
 
   def send_reply reply_hash, email
     reply_email = Email.where(key: reply_hash).take
@@ -53,21 +49,6 @@ class ApiController < ApplicationController
     Mailer.reply user, reply_email
   end
 
-  def bad_mail email
-    # return true if mail is bad
-    bad = false
-    bad = true if email.body.blank?
-    bad = true if email.body.length < 100 or email.body.split.length < 20
-
-    ban email.user if bad
-
-    return bad
-  end
-
-  def ban user
-    user.banned = true
-    user.save
-  end
 
   def close
     render nothing: true
