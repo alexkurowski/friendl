@@ -29,10 +29,7 @@ class Email < ActiveRecord::Base
     self.body = @markdown.render self.body
 
     unless self.no_reply
-      self.body = "<p id='hash'>##{self.key}</p>" << self.body
-    end
-    unless self.subject.blank?
-      self.body = "<h1>#{self.subject}</h1>" << self.body
+      self.body = "<p id='hash'>##{self.key}</p><br/>" << self.body
     end
   end
 end
