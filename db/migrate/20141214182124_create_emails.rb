@@ -5,8 +5,9 @@ class CreateEmails < ActiveRecord::Migration
       t.boolean :no_reply, default: false
       t.references :from, index: true
       t.string :key
-      t.integer :sent
-      t.text :body
+      t.integer :sent, default: 0
+      t.string :subject, default: ""
+      t.text :body, default: ""
 
       t.timestamps
     end

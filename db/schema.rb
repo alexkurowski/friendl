@@ -18,8 +18,9 @@ ActiveRecord::Schema.define(version: 20141214191904) do
     t.boolean  "no_reply",   default: false
     t.integer  "from_id"
     t.string   "key"
-    t.integer  "sent"
-    t.text     "body"
+    t.integer  "sent",       default: 0
+    t.string   "subject",    default: ""
+    t.text     "body",       default: ""
     t.datetime "created_at"
     t.datetime "updated_at"
   end
