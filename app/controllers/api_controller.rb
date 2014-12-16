@@ -19,9 +19,9 @@ class ApiController < ApplicationController
     email.save
 
     if email.is_reply
-      send_reply email.reply_hash, email
+      Mailer.send_reply email.reply_hash, email
     else
-      send_email email.from
+      Mailer.send_email email.from
     end
 
 
@@ -30,25 +30,6 @@ class ApiController < ApplicationController
 
 
   private
-
-  def send_reply reply_hash, email
-    reply_email = Email.where(key: reply_hash).take
-    unless reply_email.nil?
-      reply_user = reply_email.from
-
-      Mailer.reply_to reply_user, email
-    end
-  end
-
-  def send_email user
-    # Find a message that is not a reply
-    # that user haven't already received
-    reply_email = Email.first
-
-    # and send it to him (now or in a hour)
-    Mailer.reply user, reply_email
-  end
-
 
   def close
     render nothing: true
