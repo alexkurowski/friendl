@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get '/' => 'api#receive'
   post '/' => 'api#receive'
 
   # The priority is based upon order of creation: first created -> highest priority.

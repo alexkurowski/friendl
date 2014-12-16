@@ -4,11 +4,11 @@ class ApiController < ApplicationController
 
   # Receive an email and decide what to do with it
   def receive
-    email = Email.new from:     User.fetch_user_with_address params['sender'], # from field of the mail with the address (my@example.com)
+    email = Email.new from:     User.fetch_user_with_address(params['from']), # from field of the mail with the address (my@example.com)
                       subject:  params['subject'], # subject of the mail (should be added as "# subject" [md] to the mail later)
-                      body:     params['body'],    # main text of the message
+                      body:     params['stripped-text'],    # main text of the message
                       no_reply: false,             # no_reply should check the to field of the email here
-                      is_reply: (email.body.lstrip[0].in? ['@', '#'])
+                      is_reply: (params['stripped-text'].lstrip[0].in? ['@', '#'])
 
     # check if mail is bad
     if email.bad?

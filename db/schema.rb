@@ -14,13 +14,13 @@
 ActiveRecord::Schema.define(version: 20141214191904) do
 
   create_table "emails", force: true do |t|
-    t.boolean  "is_reply",   default: false
-    t.boolean  "no_reply",   default: false
     t.integer  "from_id"
     t.string   "key"
-    t.integer  "sent",       default: 0
     t.string   "subject",    default: ""
     t.text     "body",       default: ""
+    t.boolean  "is_reply",   default: false
+    t.boolean  "no_reply",   default: false
+    t.integer  "sent",       default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 20141214191904) do
 
   create_table "users", force: true do |t|
     t.string   "address"
+    t.boolean  "banned",     default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
